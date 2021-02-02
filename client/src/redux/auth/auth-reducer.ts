@@ -1,15 +1,17 @@
-import { InferActionsType } from "./redux-store"
+import { authAPI, UserType } from './../../api/api';
+import { BasicThunkType, InferActionsType } from "../redux-store"
+import { SignUpValuesType } from '../../components/Auth/SignUp/SignUp';
 
-const SETAUTHORIZED = 'SN/AUTH-REDUCER/SET-IS-AUTHORIZED'
-const SETUSER = 'SN/AUTH-REDUCER/SET-USER'
+const SETAUTHORIZED = 'TDL/AUTH-REDUCER/SET-IS-AUTHORIZED'
+const SETUSER = 'TDL/AUTH-REDUCER/SET-USER'
 
 
 const initialState = {
    user: {
-    firstName: null,
-    lastName: null,
-    token: null,
-    userId: null
+    firstName: null as null | string,
+    lastName: null as null | string,
+    token: null as null | string,
+    userId: null as null | string
    },
    isAuthorized: false
 }
@@ -37,9 +39,19 @@ const authReducer = (state = initialState, action: ActionsType): InitialStateTyp
 
 export const actions = {
     setIsAuthorized: (isAuthorized: boolean) => ({type: SETAUTHORIZED, isAuthorized} as const) ,
-    setUser: (user) => ({type: SETUSER, user} as const)
+    setUser: (user: UserType) => ({type: SETUSER, user} as const)
 }
 
+export const signUpThunk = (user: SignUpValuesType): ThunkType => async (dispatch) => {
+    try{
+        let response = await authAPI.signUp(user)
+        
+        debugger 
+    }catch(e){
+
+    }
+}
+ 
 // export const getLists = () => async (dispatch) => {
 //     dispatch(isFetching(true));
 //     let response = await toDoAPI.getToDoLists();
@@ -55,5 +67,6 @@ export const actions = {
 
 export default authReducer;
 //types
-type InitialStateType = typeof initialState
+export type InitialStateType = typeof initialState
 type ActionsType = InferActionsType<typeof actions>
+type ThunkType = BasicThunkType<ActionsType>
