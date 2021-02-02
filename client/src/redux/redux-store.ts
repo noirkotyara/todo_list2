@@ -15,7 +15,7 @@ window.store = store;
 
 type InferValueType<T> = T extends { [key: string]: infer U } ? U : never
 export type InferActionsType<T extends { [key: string]: (...args: any) => any }> = ReturnType<InferValueType<T>>
-export type BasicThunkType<A extends Action, R = Promise<void>> = ThunkAction<R, AppStateType, unknown, A>
+export type BasicThunkType<A extends Action, R = Promise<void | string>> = ThunkAction<R, AppStateType, unknown, A>
 export type AppStateType = ReturnType<typeof rootReducers>
 
 export type BasicComponentType = React.ComponentType<{ store: AppStateType }>//for compose

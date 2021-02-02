@@ -1,25 +1,33 @@
-import { Formik, FormikValues } from "formik"
-import { useDispatch } from "react-redux"
-import { InitialStateType, signUpThunk } from "../../../redux/auth/auth-reducer"
+import { Formik } from "formik"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useHistory } from "react-router-dom"
+import { actions, signUpThunk } from "../../../redux/auth/auth-reducer"
+import { getMessage } from "../../../redux/auth/auth-selectors"
+import { useMessage } from "../../Common/Hooks/message"
 type PropsType = {
     
 }
 
 export const SignUpPage: React.FC<PropsType> = () => {
+  const errorWrap = useMessage()
+  const errors = useSelector(getMessage)
   const dispatch = useDispatch()
-    const submitHandler = (values: SignUpValuesType, actions: any) => {
-    //  alert(JSON.stringify(values))
-    //  const value: any = JSON.stringify(values)
-
-    values && dispatch(signUpThunk(values))
+  const history = useHistory()
+  
+  useEffect(() => {
+    errorWrap(errors)
+    dispatch(actions.setErrors(null))
+  }, [errors])
+  
+  
+    const submitHandler = async (values: SignUpValuesType, actions: any) => {
+      let response: any
+      if(values){
+        response = await dispatch(signUpThunk(values))
+        !errors && history.push('/login')
+      }
     }
-    // const handleChange = event => {
-    //     setValues(prevValues => ({
-    //       ...prevValues,
-    //       // we use the name to tell Formik which key of `values` to update
-    //       [event.target.name]: event.target.value
-    //     });
-    //   }
     
     return (<div>
         <Formik

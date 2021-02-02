@@ -13,11 +13,11 @@ app.use(cors())
 
 const start = async () => {
     try {
-        await mongoose.connect(config.get('mongoURI', {
+        await mongoose.connect(config.get('mongoURI'), {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true
-        }))
+        })
         console.log('Database connected');
         app.listen(PORT, () => {
             console.log(`App listening at http://localhost:${PORT}`)

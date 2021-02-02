@@ -1,3 +1,4 @@
+import { LogInValuesType } from './../components/Auth/LogIn/LogIn';
   
 import axios from 'axios'
 import { SignUpValuesType } from '../components/Auth/SignUp/SignUp';
@@ -9,11 +10,11 @@ const instance = axios.create({
 
 
 export const authAPI = {
-    logIn(){
-        
+    logIn(user: LogInValuesType){  
+        return instance.post(`/api/auth/login`,user)
+        .then(response => response.data)
     },
     signUp(user: SignUpValuesType){
-        debugger
         return instance.post(`/api/auth/register`,user)
         .then(response => response.data)
     }

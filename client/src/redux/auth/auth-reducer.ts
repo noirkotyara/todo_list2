@@ -1,34 +1,42 @@
-import { authAPI, UserType } from './../../api/api';
-import { BasicThunkType, InferActionsType } from "../redux-store"
 import { SignUpValuesType } from '../../components/Auth/SignUp/SignUp';
+import { BasicThunkType, InferActionsType } from "../redux-store";
+import { authAPI, UserType } from './../../api/api';
+import { LogInValuesType } from './../../components/Auth/LogIn/LogIn';
 
 const SETAUTHORIZED = 'TDL/AUTH-REDUCER/SET-IS-AUTHORIZED'
 const SETUSER = 'TDL/AUTH-REDUCER/SET-USER'
-
+const SETERROR = 'TDL/AUTH-REDUCER/SET-ERROR'
 
 const initialState = {
-   user: {
-    firstName: null as null | string,
-    lastName: null as null | string,
-    token: null as null | string,
-    userId: null as null | string
-   },
-   isAuthorized: false
+    user: {
+        firstName: null as null | string,
+        lastName: null as null | string,
+        token: null as null | string,
+        userId: null as null | string
+    },
+    isAuthorized: false,
+    message: null as null | string
 }
 
 const authReducer = (state = initialState, action: ActionsType): InitialStateType => {
 
     switch (action.type) {
         case SETAUTHORIZED: {
-            return{
+            return {
                 ...state,
                 isAuthorized: action.isAuthorized
             }
         }
         case SETUSER: {
-            return{
+            return {
                 ...state,
                 user: action.user
+            }
+        }
+        case SETERROR: {
+            return {
+                ...state,
+                message: action.message
             }
         }
         default: {
@@ -38,31 +46,33 @@ const authReducer = (state = initialState, action: ActionsType): InitialStateTyp
 }
 
 export const actions = {
-    setIsAuthorized: (isAuthorized: boolean) => ({type: SETAUTHORIZED, isAuthorized} as const) ,
-    setUser: (user: UserType) => ({type: SETUSER, user} as const)
+    setIsAuthorized: (isAuthorized: boolean) => ({ type: SETAUTHORIZED, isAuthorized } as const),
+    setUser: (user: UserType) => ({ type: SETUSER, user } as const),
+    setErrors: (message: null | string) => ({ type: SETERROR, message } as const)
+
 }
 
 export const signUpThunk = (user: SignUpValuesType): ThunkType => async (dispatch) => {
-    try{
+    try {
         let response = await authAPI.signUp(user)
-        
-        debugger 
-    }catch(e){
-
+        dispatch(actions.setErrors(response.message))
+        return Promise.resolve('ok')
+    } catch (e) {
+        dispatch(actions.setErrors(e.response.data.message))
+        return Promise.reject('!ok')
     }
 }
- 
-// export const getLists = () => async (dispatch) => {
-//     dispatch(isFetching(true));
-//     let response = await toDoAPI.getToDoLists();
-//     dispatch(isFetching(false));
-//     (response.length !== 0) && dispatch(setLists(response));
-// }
 
-// export const postList = (title) => async (dispatch) => {
-//     let response = await toDoAPI.postToDoLists(title);
-//     (response.resultCode === 0) && dispatch(createList(response.data.item));
-// }
+export const logInThunk = (user: LogInValuesType): ThunkType => async (dispatch) => {
+
+    try{
+        let response = await authAPI.logIn(user)
+        dispatch(actions.setUser(response))
+        dispatch(actions.setIsAuthorized(true))
+    }catch(e){
+        dispatch(actions.setErrors(e.response.data.message))
+    }
+}
 
 
 export default authReducer;

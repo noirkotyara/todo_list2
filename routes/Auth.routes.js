@@ -2,6 +2,7 @@ const { Router } = require('express')
 const bcryptjs = require('bcryptjs')
 const User = require('./../model/Users')
 const jwt = require('jsonwebtoken')
+const config = require('config')
 const { check, validationResult } = require('express-validator')
 const route = Router()
 // const {check, validationResult} = required('express-validator')
@@ -12,13 +13,11 @@ route.post('/register',
         check('password', 'The password must be 5+ chars long').isLength({ min: 5 })
     ], async (req, res) => {
         try {
-
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: `Errors: ${errors.array()}` })
+                return res.status(400).json({ message: `Errors: ${errors.array().map(error => error.msg)}` })
             }
             const { email, password, firstName, lastName } = req.body
-            console.log(req.body)
             const isUserExisted = await User.findOne({ email })
             if (isUserExisted) {
                 Promise.reject('User is already exist')
@@ -41,11 +40,11 @@ route.post('/login',
     [
         check('email', 'Wrong email').normalizeEmail().isEmail(),
         check('password', 'Why empty?').exists()
-    ], async () => {
+    ], async (req, res) => {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: `Errors: ${errors.array()}` })
+                return res.status(400).json({ message: `Errors: validation is not passed` })
             }
             const { email, password } = req.body
 
@@ -54,19 +53,19 @@ route.post('/login',
                 Promise.reject('User is not yet existed')
                 return res.status(400).json({ message: `User is not yet existed` })
             }
-            const isPassword = await bcryptjs.compare(password, user.password, () => {
+            const isPassword = await bcryptjs.compare(password, user.password)
+
+            if (!isPassword) {
                 return res.status(400).json({ message: `Password is incorrect` })
-            })
-
+            }
             const token = jwt.sign(
-                { userId: user.id },
+                {userId: user.id},
                 config.get('jwtSecret'),
-                { expiresIn: '1h' }
+                {expiresIn:'1h'}
             )
-
-            res.json({ token, user: user.id, firstName: user.firstName, lastName: user.lastName })
+            res.status(200).json({token, userId: user.id, firstName: user.firstName, lastName: user.lastName })
         } catch (e) {
-            res.status(500).json({ message: `It is an error in /login request, try again)` })
+            res.status(500).json({ message: `It is an error in /login request, try again) ${e.message}` })
         }
     })
 
