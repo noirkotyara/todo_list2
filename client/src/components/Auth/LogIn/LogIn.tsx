@@ -1,20 +1,11 @@
 import { Formik } from "formik";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { actions, logInThunk } from "../../../redux/auth/auth-reducer";
-import { useMessage } from "../../Common/Hooks/message";
-import { getMessage } from './../../../redux/auth/auth-selectors';
+import { useDispatch } from "react-redux";
+import { logInThunk } from "../../../redux/auth/auth-reducer";
+
 
 export const LogInPage = () => {
-  const errorWrap = useMessage()
-  const errors = useSelector(getMessage)
   const dispatch = useDispatch()
   
-
-  useEffect(() => {
-    errorWrap(errors)
-    dispatch(actions.setErrors(null))
-  }, [errors])
 
   const submitHandler = (values: LogInValuesType, actions: any) => {
     values && dispatch(logInThunk(values))

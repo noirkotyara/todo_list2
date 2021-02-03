@@ -2,13 +2,17 @@ const config = require('config')
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
-const route = require('./routes/Auth.routes')
+const authRoutes = require('./routes/Auth.routes')
+const todoRoutes = require('./routes/Todo.routes')
+const tasksRoutes = require('./routes/Tasks.routes')
 const PORT = config.get('port')
 
 let app = express();
 
 app.use(express.json({ extended: true }))
-app.use('/api/auth', route)
+app.use('/api/auth', authRoutes)
+app.use('/api/todo', todoRoutes)
+app.use('/api/tasks', tasksRoutes)
 app.use(cors())
 
 const start = async () => {
@@ -16,8 +20,10 @@ const start = async () => {
         await mongoose.connect(config.get('mongoURI'), {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useCreateIndex: true
+            useCreateIndex: true,
+            useFindAndModify: false
         })
+        
         console.log('Database connected');
         app.listen(PORT, () => {
             console.log(`App listening at http://localhost:${PORT}`)

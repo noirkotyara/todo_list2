@@ -1,15 +1,19 @@
 import thunkMiddleware, { ThunkAction } from "redux-thunk";
-import toDoPage from "./todo/todo-reducer";
+import toDoReducer from "./todo/todo-reducer";
 import authReducer from './auth/auth-reducer';
 import { Action } from "redux";
+import { toDoTasksReducer } from "./todo-tasks/todoTask-reducer";
 const { combineReducers, createStore, applyMiddleware } = require("redux");
 
 const rootReducers = combineReducers({
-    toDoPage,
-    authR: authReducer
+    toDoR: toDoReducer,
+    authR: authReducer,
+    toDoTasksR: toDoTasksReducer
 });
+// @ts-ignore
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const store = createStore(rootReducers, applyMiddleware(thunkMiddleware));
+export const store = createStore(rootReducers, composeEnhancers(applyMiddleware(thunkMiddleware)))
 //@ts-ignore
 window.store = store;
 

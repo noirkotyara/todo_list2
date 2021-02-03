@@ -1,25 +1,17 @@
 import { Formik } from "formik"
-import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
-import { actions, signUpThunk } from "../../../redux/auth/auth-reducer"
-import { getMessage } from "../../../redux/auth/auth-selectors"
-import { useMessage } from "../../Common/Hooks/message"
+import { signUpThunk } from "../../../redux/auth/auth-reducer"
+import { getAuthMessage } from "../../../redux/auth/auth-selectors"
 type PropsType = {
     
 }
 
 export const SignUpPage: React.FC<PropsType> = () => {
-  const errorWrap = useMessage()
-  const errors = useSelector(getMessage)
+  
   const dispatch = useDispatch()
   const history = useHistory()
-  
-  useEffect(() => {
-    errorWrap(errors)
-    dispatch(actions.setErrors(null))
-  }, [errors])
-  
+  const errors = useSelector(getAuthMessage)
   
     const submitHandler = async (values: SignUpValuesType, actions: any) => {
       let response: any

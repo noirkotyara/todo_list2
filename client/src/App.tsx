@@ -7,18 +7,28 @@ import './App.css';
 import { LogInPage } from './components/Auth/LogIn/LogIn';
 import { SignUpPage } from './components/Auth/SignUp/SignUp';
 import { Header } from './components/Common/Header/Header';
+import { useMessage } from './components/Common/Hooks/message';
 import { StarterPage } from './components/Common/Starter_page/StarterPage';
 import { actions } from './redux/auth/auth-reducer';
-import { getIsAuthorized, getUserInfo } from './redux/auth/auth-selectors';
+import { getAuthMessage, getIsAuthorized, getUserInfo } from './redux/auth/auth-selectors';
+import { getTodoMessage } from './redux/todo/todo-selectors';
+import { getTodoTaskMessage } from './redux/todo-tasks/todoTask-selectors';
 
 const App = () => {
 
   const isAuthorized = useSelector(getIsAuthorized)
   const user = useSelector(getUserInfo)
   const dispatch = useDispatch()
+  const errorWrap = useMessage()
+  const todoTaskError = useSelector(getTodoTaskMessage)
+  const todoError = useSelector(getTodoMessage)
+  const authError = useSelector(getAuthMessage)
+  useEffect(() => {
+    errorWrap(todoTaskError || todoError || authError)
+    dispatch(actions.setErrors(null))
+  }, [todoTaskError, todoError, authError])
 
   useEffect(() => {
-    // debugger
     let user: UserType
     let isExist = localStorage.getItem('items')
     if (isExist !== null) {

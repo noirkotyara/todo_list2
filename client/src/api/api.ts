@@ -1,52 +1,132 @@
 import { LogInValuesType } from './../components/Auth/LogIn/LogIn';
-  
+
 import axios from 'axios'
 import { SignUpValuesType } from '../components/Auth/SignUp/SignUp';
 
 const instance = axios.create({
-    headers: { ['Content-Type']: 'application/json'}
+    headers: {
+        ['Content-Type']: 'application/json'
+    }
 });
 
 
 
 export const authAPI = {
-    logIn(user: LogInValuesType){  
-        return instance.post(`/api/auth/login`,user)
-        .then(response => response.data)
-    },
-    signUp(user: SignUpValuesType){
-        return instance.post(`/api/auth/register`,user)
-        .then(response => response.data)
-    }
-} 
-export const todoAPI = {
-    getToDoLists(){
-        return instance.get(`/todo-lists`)
+    logIn(user: LogInValuesType) {
+        return instance.post(`/api/auth/login`, user)
             .then(response => response.data)
     },
-    // postToDoLists(title){
-    //     return instance.post(`/todo-lists`, {title})
-    //         .then(response => response.data);
-    //         //resultCode messages[]
-    //         // data -> item:{id title addedDate order}
-    // },
-    // renameToDoList(todolistId, title){
-    //     return instance.put(`/todo-lists/${todolistId}`, {title})
-    //         .then(response => response.data);
-    //         //check response
-    // },
-    // deleteToDoList(todolistId){
-    //     return instance.delete(`/todo-lists/${todolistId}`)
-    //         .then(response => response.data);
-    //         //resultCode messages[] data{}
-    // },
-    // reorderToDoList(todolistId: , putAfterItemId){
-    //     //putAfterItemId: 'string'
-    //     return instance.put(`/todo-lists/${todolistId}/reorder`, {putAfterItemId: putAfterItemId})
-    //         .then(response => response.data);
-    //         //resultCode messages[] data{}
-    // }
+    signUp(user: SignUpValuesType) {
+        return instance.post(`/api/auth/register`, user)
+            .then(response => response.data)
+    }
 }
+export const todoAPI = {
+    getToDoLists(token: string) {
+        return instance.get(`/api/todo/lists`, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data)
+    },
+    postToDoLists(title: string, token: string) {
+        return instance.post(`/api/todo/lists`, { title }, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data)
+    },
+    renameToDoList(todolistId: string, title: string, token: string) {
+        return instance.put(`/api/todo/lists/${todolistId}`, { title }, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data)
+    },
+    deleteToDoList(todolistId: string, token: string) {
+        return instance.delete(`/api/todo/lists/${todolistId}`, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data)
+    },
+    reorderToDoList(todolistId: string, putAfterItemId: string, token: string) {
+
+        return instance.put(`/api/todo/lists/${todolistId}/reorder`, { putAfterItemId }, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data);
+    }
+}
+
+export const tasksAPI = {
+    getTasks(todolistId: string, token: string){
+        return instance.get(`/api/tasks/${todolistId}/tasks`, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data)
+    },
+    postTasks(todolistId: string, title: string, token: string){
+        return instance.post(`/api/tasks/${todolistId}/tasks`, {title}, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data)
+    },
+    deleteTasks(todolistId: string, taskId: string, token: string){
+        return instance.delete(`/api/tasks/${todolistId}/tasks/${taskId}`, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data);
+    },
+    updateTasks(todolistId: string, taskId: string, updateTask: UpdatedTaskType, token: string){
+        return instance.put(`/api/tasks/${todolistId}/tasks/${taskId}`, updateTask, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data);
+    },
+    reorderTasks(todolistId: string, taskId: string, putAfterItemId: string, token: string){
+        return instance.put(`/api/tasks/${todolistId}/tasks/${taskId}/reorder`, {putAfterItemId}, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.data);
+    }
+}
+
+export type UpdatedTaskType = {
+    title: string,
+    completed: boolean,
+    deadline: Date,
+    description: string
+}
+
+export type TaskType = {
+    _id: string,
+    description: String,
+    title:  string,
+    // priority: Number,
+    completed: boolean,
+    startDate: Date,
+    deadline: string,
+    order: number,
+    listId: string,
+}
+
 export type UserType = {
     firstName: null | string,
     lastName: null | string,
@@ -54,18 +134,9 @@ export type UserType = {
     userId: null | string
 }
 export type ListType = {
-   _id: string,
-   title: string,
-   addedDate: string,
-   order: number 
-}
-export type TaskType = {
-    description: string,
+    _id: string,
     title: string,
-    priority: number,
-    completed: boolean,
-    startDate: string,
-    deadline: string,
+    addedDate: Date,
     order: number,
-    listId: string
+    tasks: Array<any>  ////????any
 }

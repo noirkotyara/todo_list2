@@ -1,33 +1,25 @@
 import { todoAPI } from './../../api/api';
 import { ListType, TaskType } from '../../api/api';
 import { AppStateType, BasicThunkType, InferActionsType } from '../redux-store';
-// import { toDoAPI } from "../api/api";
 
-const SET_LISTS = 'SET-LISTS';
-const SET_TASKS = 'SET-TASKS';
-const CREATE_LIST = 'CREATE-LIST';
-const DELETE_LIST = 'DELETE-LIST';
-const RENAME_LIST = 'RENAME-LIST';
-const IS_FETCH = 'IS-FETCH';
+const SET_LISTS = 'TDL/TODO-REDUCER/SET-LISTS';
+const CREATE_LIST = 'TDL/TODO-REDUCER/CREATE-LIST';
+const DELETE_LIST = 'TDL/TODO-REDUCER/DELETE-LIST';
+const RENAME_LIST = 'TDL/TODO-REDUCER/RENAME-LIST';
+const CHANGE_ORD = 'TDL/TODO-REDUCER/CHANGE-ORD';
+const IS_FETCH = 'TDL/TODO-REDUCER/IS-FETCH';
+const SETERROR = 'TDL/TODO-REDUCER/SET-ERROR'
 
 const initialState = {
-    lists: [
-        {
-            "_id": "9f27f97b-bc63-4114-9baa-c91facbd4ffb",
-            "title": "what todo",
-            "addedDate": "2019-07-30T12:24:15.063",
-            "order": 0
-        }
-    ] as Array<ListType>,
-    tasks: [] as Array<TaskType>,
-    isFetching: false
+    lists: [] as Array<ListType>,
+    isFetching: false,
+    message: null as null | string
 }
 
-const toDoPage = (state = initialState, action: ActionsType): InitialStateType => {
+const toDoReducer = (state = initialState, action: ActionsType): InitialStateType => {
 
     switch (action.type) {
         case SET_LISTS: {
-
             return {
                 ...state,
                 lists: action.lists
@@ -57,6 +49,30 @@ const toDoPage = (state = initialState, action: ActionsType): InitialStateType =
                 isFetching: action.bool
             }
         }
+        case SETERROR: {
+            return {
+                ...state,
+                message: action.message
+            }
+        }
+        case CHANGE_ORD: {
+            let a, indexs = 0;
+            let array = state.lists;
+
+            array.forEach((elem, index) => {
+                if (elem._id === action.todolistId) {
+                    indexs = index;
+                }
+            })
+
+            a = array[indexs];
+            array[indexs] = array[indexs + 1];
+            array[indexs + 1] = a;
+            return {
+                ...state,
+                lists: array.map(item => { return item })
+            }
+        }
         default: {
             return state;
         }
@@ -64,37 +80,87 @@ const toDoPage = (state = initialState, action: ActionsType): InitialStateType =
 }
 export const actions = {
     setLists: (lists: Array<ListType>) => ({ type: SET_LISTS, lists } as const),
-    setTasks: (tasks: Array<any>) => ({ type: SET_TASKS, tasks } as const),
     createList: (list: any) => ({ type: CREATE_LIST, list } as const),
     deleteList: (todolistId: string) => ({ type: DELETE_LIST, todolistId } as const),
     renameTitle: (todolistId: string, title: string) => ({ type: RENAME_LIST, todolistId, title } as const),
     isFetching: (bool: boolean) => ({ type: IS_FETCH, bool } as const),
+    setErrors: (message: null | string) => ({ type: SETERROR, message } as const),
+    changeOrder: (todolistId: string, putAfterItemId: string) => ({ type: CHANGE_ORD, todolistId, putAfterItemId } as const)
 }
 
-export const getLists = (): ThunkType => async dispatch => {
-    dispatch(actions.isFetching(true));
-    let response = await todoAPI.getToDoLists();
-    dispatch(actions.isFetching(false));
-    (response.length !== 0) && dispatch(actions.setLists(response));
+export const getLists = (): ThunkType => async (dispatch, getState: () => AppStateType) => {
+
+    try {
+        dispatch(actions.isFetching(true))
+        let response = await todoAPI.getToDoLists(getState().authR.user.token);
+        dispatch(actions.isFetching(false))
+        dispatch(actions.setLists(response))
+        dispatch(actions.setErrors(response.message))
+    } catch (e) {
+        dispatch(actions.isFetching(false))
+        dispatch(actions.setErrors(e.response.data.message))
+    }
+
+
 }
 
-// export const postList = (title) => async (dispatch) => {
-//     let response = await toDoAPI.postToDoLists(title);
-//     (response.resultCode === 0) && dispatch(createList(response.data.item));
-// }
+export const postList = (title: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
 
-// export const deleteListThunk = (todolistId) => async (dispatch) => {
-//     let response = await toDoAPI.deleteToDoList(todolistId);
-//     (response.resultCode === 0) && dispatch(deleteList(todolistId));
-// }
+    try {
+        dispatch(actions.isFetching(true))
+        let response = await todoAPI.postToDoLists(title, getState().authR.user.token)
+        dispatch(actions.isFetching(false))
+        dispatch(actions.createList(response))
+        dispatch(actions.setErrors(response.message))
+    } catch (e) {
+        dispatch(actions.isFetching(false))
+        dispatch(actions.setErrors(e.response.data.message))
+    }
+}
+
+export const deleteListThunk = (todolistId: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
+    try {
+        dispatch(actions.isFetching(true))
+        let response = await todoAPI.deleteToDoList(todolistId, getState().authR.user.token)
+        dispatch(actions.isFetching(false))
+        dispatch(actions.deleteList(todolistId))
+        dispatch(actions.setErrors(response.message))
+    } catch (e) {
+        dispatch(actions.isFetching(false))
+        dispatch(actions.setErrors(e.response.data.message))
+    }
+
+}
 
 
-// export const renameTitleThunk = (todolistId, title) => async (dispatch) => {
-//     let response = await toDoAPI.renameToDoList(todolistId, title);
-//     (response.resultCode === 0) && dispatch(renameTitle(todolistId, title))
-// }
+export const renameTitleThunk = (todolistId: string, title: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
+    try {
+        dispatch(actions.isFetching(true))
+        let response = await todoAPI.renameToDoList(todolistId, title, getState().authR.user.token)
+        dispatch(actions.isFetching(false))
+        dispatch(actions.renameTitle(todolistId, title))
+        dispatch(actions.setErrors(response.message))
+    } catch (e) {
+        dispatch(actions.isFetching(false))
+        dispatch(actions.setErrors(e.response.data.message))
+    }
+}
 
-export default toDoPage;
+export const changeOrderThunk = (todolistId: string, putAfterItemId: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
+    try {
+        dispatch(actions.isFetching(true))
+        let response = await todoAPI.reorderToDoList(todolistId, putAfterItemId, getState().authR.user.token)
+        dispatch(actions.isFetching(false))
+        dispatch(actions.changeOrder(todolistId, putAfterItemId));
+        dispatch(actions.setErrors(response.message))
+    } catch (e) {
+        dispatch(actions.isFetching(false))
+        dispatch(actions.setErrors(e.response.data.message))
+    }
+
+}
+
+export default toDoReducer;
 
 export type InitialStateType = typeof initialState
 type ActionsType = InferActionsType<typeof actions>
