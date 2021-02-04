@@ -16,7 +16,7 @@ const initialState = {
     message: null as null | string
 }
 
-const toDoReducer = (state = initialState, action: ActionsType): InitialStateType => {
+const toDoReducer = (state = initialState, action: actionsTodoType): InitialStateType => {
 
     switch (action.type) {
         case SET_LISTS: {
@@ -78,7 +78,7 @@ const toDoReducer = (state = initialState, action: ActionsType): InitialStateTyp
         }
     }
 }
-export const actions = {
+export const actionsTodo = {
     setLists: (lists: Array<ListType>) => ({ type: SET_LISTS, lists } as const),
     createList: (list: any) => ({ type: CREATE_LIST, list } as const),
     deleteList: (todolistId: string) => ({ type: DELETE_LIST, todolistId } as const),
@@ -91,14 +91,14 @@ export const actions = {
 export const getLists = (): ThunkType => async (dispatch, getState: () => AppStateType) => {
 
     try {
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodo.isFetching(true))
         let response = await todoAPI.getToDoLists(getState().authR.user.token);
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setLists(response))
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.setLists(response))
+        dispatch(actionsTodo.setErrors(response.message))
     } catch (e) {
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.setErrors(e.response.data.message))
     }
 
 
@@ -107,27 +107,27 @@ export const getLists = (): ThunkType => async (dispatch, getState: () => AppSta
 export const postList = (title: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
 
     try {
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodo.isFetching(true))
         let response = await todoAPI.postToDoLists(title, getState().authR.user.token)
-        dispatch(actions.isFetching(false))
-        dispatch(actions.createList(response))
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.createList(response))
+        dispatch(actionsTodo.setErrors(response.message))
     } catch (e) {
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.setErrors(e.response.data.message))
     }
 }
 
 export const deleteListThunk = (todolistId: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
     try {
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodo.isFetching(true))
         let response = await todoAPI.deleteToDoList(todolistId, getState().authR.user.token)
-        dispatch(actions.isFetching(false))
-        dispatch(actions.deleteList(todolistId))
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.deleteList(todolistId))
+        dispatch(actionsTodo.setErrors(response.message))
     } catch (e) {
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.setErrors(e.response.data.message))
     }
 
 }
@@ -135,27 +135,27 @@ export const deleteListThunk = (todolistId: string): ThunkType => async (dispatc
 
 export const renameTitleThunk = (todolistId: string, title: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
     try {
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodo.isFetching(true))
         let response = await todoAPI.renameToDoList(todolistId, title, getState().authR.user.token)
-        dispatch(actions.isFetching(false))
-        dispatch(actions.renameTitle(todolistId, title))
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.renameTitle(todolistId, title))
+        dispatch(actionsTodo.setErrors(response.message))
     } catch (e) {
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.setErrors(e.response.data.message))
     }
 }
 
 export const changeOrderThunk = (todolistId: string, putAfterItemId: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
     try {
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodo.isFetching(true))
         let response = await todoAPI.reorderToDoList(todolistId, putAfterItemId, getState().authR.user.token)
-        dispatch(actions.isFetching(false))
-        dispatch(actions.changeOrder(todolistId, putAfterItemId));
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.changeOrder(todolistId, putAfterItemId));
+        dispatch(actionsTodo.setErrors(response.message))
     } catch (e) {
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodo.isFetching(false))
+        dispatch(actionsTodo.setErrors(e.response.data.message))
     }
 
 }
@@ -163,5 +163,5 @@ export const changeOrderThunk = (todolistId: string, putAfterItemId: string): Th
 export default toDoReducer;
 
 export type InitialStateType = typeof initialState
-type ActionsType = InferActionsType<typeof actions>
-type ThunkType = BasicThunkType<ActionsType>
+type actionsTodoType = InferActionsType<typeof actionsTodo>
+type ThunkType = BasicThunkType<actionsTodoType>

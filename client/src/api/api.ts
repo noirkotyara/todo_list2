@@ -130,9 +130,9 @@ export type TaskType = {
 export type UserType = {
     firstName: null | string,
     lastName: null | string,
-    token: null | string,
-    userId: null | string
+    token: null | string
 }
+
 export type ListType = {
     _id: string,
     title: string,

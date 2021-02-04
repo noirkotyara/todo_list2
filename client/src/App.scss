@@ -1,0 +1,17 @@
+
+
+header{
+    &.ant-layout-header{
+        padding: 10px 150px 0 150px;
+        height: auto; 
+    }
+    &.ant-menu-dark.ant-menu-horizontal{
+        .ant-menu-item-selected{
+            background-color: aquamarine;
+        }
+        
+    }
+    // &-dark&-horizontal > &-item:hover {
+    //     background-color: aquamarine;
+    //   }
+}

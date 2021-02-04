@@ -13,13 +13,10 @@ module.exports = (req, res, next) => {
             return res.status(401).json({message: 'User is not authenticated'})
         }
         const decoded = jwt.verify(token, config.get('jwtSecret'))
-        //user: {userId: '23092i09'}
-        
         req.user = decoded
-        // console.log(req.user)
         next()
 
     }catch(e){
-        res.status(401).json({message: 'User is not verified'})
+        res.status(401).json({message: 'Your session time is run out'})
     }
 }

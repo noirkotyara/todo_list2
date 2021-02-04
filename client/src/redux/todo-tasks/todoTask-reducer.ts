@@ -88,7 +88,7 @@ export const toDoTasksReducer = (state = initialState, action: any) => {
     }
 }
 
-export const actions = {
+export const actionsTodoTask = {
     getTasks: (tasks: Array<TaskType>) => ({ type: GET_TASKS, tasks } as const),
     postTasks: (taskItem: TaskType) => ({ type: POST_TASK, taskItem } as const),
     deleteTask: (taskId: string) => ({ type: DEL_TASK, taskId } as const),
@@ -102,40 +102,40 @@ export const actions = {
 
 export const getTasksThunk = (todolistId: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
     try {
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodoTask.isFetching(true))
         let response = await tasksAPI.getTasks(todolistId, getState().authR.user.token)
-        dispatch(actions.isFetching(false))
-        dispatch(actions.getTasks(response))
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodoTask.isFetching(false))
+        dispatch(actionsTodoTask.getTasks(response))
+        dispatch(actionsTodoTask.setErrors(response.message))
     } catch (e) {
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodoTask.isFetching(false))
+        dispatch(actionsTodoTask.setErrors(e.response.data.message))
     }
 }
 
 export const postTasksThunk = (todolistId: string, newTaskTitle: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
     try {
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodoTask.isFetching(true))
         let response = await tasksAPI.postTasks(todolistId, newTaskTitle, getState().authR.user.token);
-        dispatch(actions.isFetching(false))
-        dispatch(actions.postTasks(response));
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodoTask.isFetching(false))
+        dispatch(actionsTodoTask.postTasks(response));
+        dispatch(actionsTodoTask.setErrors(response.message))
     } catch (e) {
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodoTask.isFetching(false))
+        dispatch(actionsTodoTask.setErrors(e.response.data.message))
     }
 }
 
 export const deleteTaskThunk = (todolistId: string, taskId: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
     try {
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodoTask.isFetching(true))
         let response = await tasksAPI.deleteTasks(todolistId, taskId, getState().authR.user.token);
-        dispatch(actions.isFetching(false))
-        dispatch(actions.deleteTask(taskId));
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodoTask.isFetching(false))
+        dispatch(actionsTodoTask.deleteTask(taskId));
+        dispatch(actionsTodoTask.setErrors(response.message))
     } catch (e) {
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodoTask.isFetching(false))
+        dispatch(actionsTodoTask.setErrors(e.response.data.message))
     }
 }
 
@@ -144,32 +144,32 @@ export const updateTaskThunk = (
     taskId: string,
     updatedTaskObject: UpdatedTaskType): ThunkType => async (dispatch, getState: () => AppStateType) => {
         try {
-            dispatch(actions.isFetching(true))
+            dispatch(actionsTodoTask.isFetching(true))
             let response = await tasksAPI.updateTasks(todolistId, taskId, updatedTaskObject, getState().authR.user.token);
-            dispatch(actions.isFetching(false))
-            dispatch(actions.updateTask(taskId, response.updatedTask))
-            dispatch(actions.setErrors(response.message))
+            dispatch(actionsTodoTask.isFetching(false))
+            dispatch(actionsTodoTask.updateTask(taskId, response.updatedTask))
+            dispatch(actionsTodoTask.setErrors(response.message))
         } catch (e) {
-            dispatch(actions.isFetching(false))
-            dispatch(actions.setErrors(e.response.data.message))
+            dispatch(actionsTodoTask.isFetching(false))
+            dispatch(actionsTodoTask.setErrors(e.response.data.message))
         }
     }
 
 export const reorderTaskThunk = (todolistId: string, taskId: string, putAfterItemId: string): ThunkType => async (dispatch, getState: () => AppStateType) => {
     
     try{
-        dispatch(actions.isFetching(true))
+        dispatch(actionsTodoTask.isFetching(true))
         let response = await tasksAPI.reorderTasks(todolistId, taskId, putAfterItemId, getState().authR.user.token)
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsTodoTask.isFetching(false))
+        dispatch(actionsTodoTask.setErrors(response.message))
     }catch(e){
-        dispatch(actions.isFetching(false))
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsTodoTask.isFetching(false))
+        dispatch(actionsTodoTask.setErrors(e.response.data.message))
     }
     
-    dispatch(actions.reorderTask(taskId));
+    dispatch(actionsTodoTask.reorderTask(taskId));
 }
 
 export type InitialStateType = typeof initialState
-type ActionsType = InferActionsType<typeof actions>
+type ActionsType = InferActionsType<typeof actionsTodoTask>
 type ThunkType = BasicThunkType<ActionsType>

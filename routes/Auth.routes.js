@@ -10,6 +10,8 @@ const route = Router()
 route.post('/register',
     [
         check('email', 'Wrong email').isEmail(),
+        check('firstName', 'The \'first name\' is required').isLength({ min: 1 }),
+        check('lastName', 'The \'last name\' is required').isLength({ min: 1 }),
         check('password', 'The password must be 5+ chars long').isLength({ min: 5 })
     ], async (req, res) => {
         try {
@@ -30,7 +32,7 @@ route.post('/register',
             res.status(200).json({ message: 'User is created' });
 
         } catch (e) {
-            res.status(500).json({ message: `It is an error in /register request, try again)` })
+            res.status(500).json({ message: `${e.message}` })
         }
 
 
@@ -39,7 +41,7 @@ route.post('/register',
 route.post('/login',
     [
         check('email', 'Wrong email').normalizeEmail().isEmail(),
-        check('password', 'Why empty?').exists()
+        check('password', 'Why empty?').optional()
     ], async (req, res) => {
         try {
             const errors = validationResult(req)
@@ -63,7 +65,7 @@ route.post('/login',
                 config.get('jwtSecret'),
                 {expiresIn:'1h'}
             )
-            res.status(200).json({token, userId: user.id, firstName: user.firstName, lastName: user.lastName })
+            res.status(200).json({token, firstName: user.firstName, lastName: user.lastName })
         } catch (e) {
             res.status(500).json({ message: `It is an error in /login request, try again) ${e.message}` })
         }

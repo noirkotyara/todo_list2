@@ -1,9 +1,8 @@
-import style from './Tasks.module.css';
 import React, { useState } from 'react';
-import Task from './Task';
-import arrowDown from './../../../assets/arrowDown.png';
 import { useDispatch } from 'react-redux';
 import { getTasksThunk } from '../../../redux/todo-tasks/todoTask-reducer';
+import Task from './Task';
+import style from './Tasks.module.scss';
 type PropsType = {
     listId: string
 }

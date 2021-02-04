@@ -4,7 +4,7 @@ import { getLists, postList } from '../../redux/todo/todo-reducer';
 import { getIsFetching } from '../../redux/todo/todo-selectors';
 import { Preloader } from '../Common/Preloader/Preloader';
 import List from './List';
-import style from './Lists.module.css';
+import style from './Lists.module.scss';
 // import List from './List';
 // import Preloader from '../Common/Preloader';
 

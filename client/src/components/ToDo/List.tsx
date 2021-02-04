@@ -1,4 +1,4 @@
-import style from './Lists.module.css';
+import style from './Lists.module.scss';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLists } from '../../redux/todo/todo-selectors';

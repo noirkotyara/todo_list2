@@ -1,0 +1,28 @@
+.listUI{
+    width: 400px;
+    height: 100%;
+    background: chartreuse;
+    margin: 20px auto;
+}
+.content{
+    text-align: center;
+    
+}
+.newTitle{
+    text-align: center;
+    width: 70%;
+    height: 70px;
+    /* background-color: blue; */
+    margin: 0 auto;
+}
+.tasks{
+    margin: 0 auto;
+    width: 80%;
+    height: 70px;
+    background: coral;
+}
+
+.delTitle{
+    float: right;
+    cursor: pointer;
+}

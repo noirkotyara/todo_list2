@@ -1,21 +1,22 @@
-import 'materialize-css';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { UserType } from './api/api';
-import './App.css';
+import './App.scss';
 import { LogInPage } from './components/Auth/LogIn/LogIn';
 import { SignUpPage } from './components/Auth/SignUp/SignUp';
-import { Header } from './components/Common/Header/Header';
+import { HeaderH } from './components/Common/Header/Header';
 import { useMessage } from './components/Common/Hooks/message';
 import { StarterPage } from './components/Common/Starter_page/StarterPage';
-import { actions } from './redux/auth/auth-reducer';
+import { actionsAuth } from './redux/auth/auth-reducer';
 import { getAuthMessage, getIsAuthorized, getUserInfo } from './redux/auth/auth-selectors';
 import { getTodoMessage } from './redux/todo/todo-selectors';
 import { getTodoTaskMessage } from './redux/todo-tasks/todoTask-selectors';
+import 'antd/dist/antd.css';
+import { actionsTodoTask } from './redux/todo-tasks/todoTask-reducer';
+import { actionsTodo } from './redux/todo/todo-reducer';
 
 const App = () => {
-
   const isAuthorized = useSelector(getIsAuthorized)
   const user = useSelector(getUserInfo)
   const dispatch = useDispatch()
@@ -24,8 +25,14 @@ const App = () => {
   const todoError = useSelector(getTodoMessage)
   const authError = useSelector(getAuthMessage)
   useEffect(() => {
+    if ((todoTaskError || todoError || authError) === 'Your session time is run out'){
+        dispatch(actionsAuth.setIsAuthorized(false))
+        dispatch(actionsAuth.setUser(null))
+    }
     errorWrap(todoTaskError || todoError || authError)
-    dispatch(actions.setErrors(null))
+    dispatch(actionsAuth.setErrors(null))
+    dispatch(actionsTodoTask.setErrors(null))
+    dispatch(actionsTodo.setErrors(null))
   }, [todoTaskError, todoError, authError])
 
   useEffect(() => {
@@ -34,8 +41,8 @@ const App = () => {
     if (isExist !== null) {
       user = JSON.parse(isExist)
       if (user) {
-        dispatch(actions.setUser(user))
-        dispatch(actions.setIsAuthorized(true))
+        dispatch(actionsAuth.setUser(user))
+        dispatch(actionsAuth.setIsAuthorized(true))
       }
     }
   }, [])
@@ -51,7 +58,7 @@ const App = () => {
 
   return (
     <div className="container">
-      <Header />
+      <HeaderH />
       {isAuthorized
         ? (<Switch>
             <Route path='/start' exact render={() => <StarterPage />}></Route>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Description from './Description';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTasks } from '../../../redux/todo-tasks/todoTask-selectors';
-import style from './Tasks.module.css';
+import style from './Tasks.module.scss';
 import { deleteTaskThunk, postTasksThunk, reorderTaskThunk, updateTaskThunk } from '../../../redux/todo-tasks/todoTask-reducer';
 import { TaskType } from '../../../api/api';
 

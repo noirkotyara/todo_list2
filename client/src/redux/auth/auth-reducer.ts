@@ -11,9 +11,8 @@ const initialState = {
     user: {
         firstName: null as null | string,
         lastName: null as null | string,
-        token: null as null | string,
-        userId: null as null | string
-    },
+        token: null as null | string
+    } as null | UserType,
     isAuthorized: false,
     message: null as null | string
 }
@@ -45,20 +44,19 @@ const authReducer = (state = initialState, action: ActionsType): InitialStateTyp
     }
 }
 
-export const actions = {
+export const actionsAuth = {
     setIsAuthorized: (isAuthorized: boolean) => ({ type: SETAUTHORIZED, isAuthorized } as const),
-    setUser: (user: UserType) => ({ type: SETUSER, user } as const),
-    setErrors: (message: null | string) => ({ type: SETERROR, message } as const)
-
+    setUser: (user: UserType | null) => ({ type: SETUSER, user } as const),
+    setErrors: (message: null | string) => ({ type: SETERROR, message } as const),
 }
 
 export const signUpThunk = (user: SignUpValuesType): ThunkType => async (dispatch) => {
     try {
         let response = await authAPI.signUp(user)
-        dispatch(actions.setErrors(response.message))
+        dispatch(actionsAuth.setErrors(response.message))
         return Promise.resolve('ok')
     } catch (e) {
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsAuth.setErrors(e.response.data.message))
         return Promise.reject('!ok')
     }
 }
@@ -67,16 +65,17 @@ export const logInThunk = (user: LogInValuesType): ThunkType => async (dispatch)
 
     try{
         let response = await authAPI.logIn(user)
-        dispatch(actions.setUser(response))
-        dispatch(actions.setIsAuthorized(true))
-    }catch(e){
-        dispatch(actions.setErrors(e.response.data.message))
+        dispatch(actionsAuth.setUser(response))
+        dispatch(actionsAuth.setIsAuthorized(true))
+    } catch(e){
+        dispatch(actionsAuth.setErrors(e.response.data.message))
     }
 }
+
 
 
 export default authReducer;
 //types
 export type InitialStateType = typeof initialState
-type ActionsType = InferActionsType<typeof actions>
+type ActionsType = InferActionsType<typeof actionsAuth>
 type ThunkType = BasicThunkType<ActionsType>
