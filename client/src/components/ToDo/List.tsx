@@ -5,6 +5,9 @@ import { getLists } from '../../redux/todo/todo-selectors';
 import { ListType, UserType } from '../../api/api';
 import { changeOrderThunk, deleteListThunk, renameTitleThunk } from '../../redux/todo/todo-reducer';
 import Tasks from './Task/Tasks';
+import {DeleteOutlined} from '@ant-design/icons';
+import arrowUp from './../../assest/ArrowUp.svg';
+import arrowDown from './../../assest/ArrowDown.svg';
 
 
 const List: React.FC<any> = (props) => {
@@ -40,24 +43,22 @@ const List: React.FC<any> = (props) => {
         let date = new Date(list.addedDate)
         return (<div key={list._id} className={style.listUI}>
             <div className={style.title}>
-                <span>
+                <span className={style.edit_title}>
                     {(editMode && list._id === choosedTitle)
                         ? <input onBlur={updateTitle} autoFocus={true} onChange={(e) => changeNewTitleText(e.currentTarget.value)} value={newTitleText}></input>
-                        : <span onDoubleClick={() => activateEditMode(list.title, list._id)}>{list.title}</span>
+                        : <span className={style.listTitle} onDoubleClick={() => activateEditMode(list.title, list._id)}>{list.title}</span>
                     }
                 </span>
-                <span onClick={() => deleteList(list._id)} className={style.delTitle}>
-                    X
+                <span onClick={() => deleteList(list._id)} className={style.del_title}>
+                    <DeleteOutlined />
                 </span>
             </div>
             <div className={style.tasks}>
-                <div>
                     <Tasks listId={list._id}/>
-                </div>
             </div>
-            <div> 
-                {index < array.length-1 && <input onClick={() => changeOrder(array[index]._id, array[index+1]._id)} type="button" value='-'/> }
-                {index > 0 && <input onClick={() => changeOrder(array[index-1]._id, array[index]._id)} type="button" value='+'/> }
+            <div className={style.arrows} > 
+                {index < array.length-1 && <div className={style.down} onClick={() => changeOrder(array[index]._id, array[index+1]._id) }  ><img  src={arrowDown} alt='arrow_down'/> </div> }
+                {index > 0 && <div onClick={() => changeOrder(array[index-1]._id, array[index]._id)}  className={style.up}><img src={arrowUp} alt='arrow_up'/></div> }
              </div>
              <div className={style.date}>{date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()}</div>
         </div>);

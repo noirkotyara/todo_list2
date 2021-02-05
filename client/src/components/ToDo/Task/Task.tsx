@@ -5,6 +5,11 @@ import { getTasks } from '../../../redux/todo-tasks/todoTask-selectors';
 import style from './Tasks.module.scss';
 import { deleteTaskThunk, postTasksThunk, reorderTaskThunk, updateTaskThunk } from '../../../redux/todo-tasks/todoTask-reducer';
 import { TaskType } from '../../../api/api';
+import { Formik } from "formik";
+import { Form, Input } from 'formik-antd'
+import { DeleteOutlined } from '@ant-design/icons';
+import arrowUp from './../../../assest/ArrowUp.svg';
+import arrowDown from './../../../assest/ArrowDown.svg';
 
 type PropsType = {
     listId: string
@@ -14,7 +19,6 @@ const Task: React.FC<PropsType> = React.memo(props => {
 
     const dispatch = useDispatch()
     const tasks = useSelector(getTasks)
-    let [newTaskTitle, changeNewTask] = useState('');
 
     let [editMode, changeEditMode] = useState(false);
     let [TaskText, changeTaskText] = useState('');
@@ -40,32 +44,37 @@ const Task: React.FC<PropsType> = React.memo(props => {
         dispatch(reorderTaskThunk(props.listId, taskId, putAfterItemId))
     }
 
-    
+
     let setStatusModeFalse = (task: any) => {
         changeEditMode(!editMode);
-        dispatch(updateTaskThunk(props.listId, task._id, {...task, title:TaskText}))
+        dispatch(updateTaskThunk(props.listId, task._id, { ...task, title: TaskText }))
     }
     let changeCheckBox = (bool: boolean, task: any) => {
         let intBool = Number(bool);
-        dispatch(updateTaskThunk(props.listId, task.id, {...task, completed: intBool }))
+        dispatch(updateTaskThunk(props.listId, task._id, { ...task, completed: intBool }))
     }
 
     let taskArray = tasks && tasks.map((task: TaskType, index: number, array: Array<TaskType>) => {
         if (task.listId === props.listId) {
             let date = new Date(task.startDate)
             return <div key={task._id} className={style.taskItem}>
-                <div>
-                    {(editMode && choosedTask === task._id)
-                        ? <input autoFocus={true} onBlur={() => setStatusModeFalse(task)} onChange={(e) => setTaskText(e.currentTarget.value)} type="text" value={TaskText} />
-                        : <span onDoubleClick={() => setStatusModeTrue(task.title, task._id)}>{task.title}</span>
-                    }
-                    <span onClick={() => deleteTask(task._id)} className={style.delete}>X</span> 
                     <input checked={task.completed} //CHECKBOX
                         onChange={(e) => changeCheckBox(e.currentTarget.checked, task)}
                         className={style.complete}
-                        type='checkbox'>
+                        type='checkbox'
+                    />
+                    <div className={style.title}>
+                        {(editMode && choosedTask === task._id)
+                            ? <input autoFocus={true} onBlur={() => setStatusModeFalse(task)} onChange={(e) => setTaskText(e.currentTarget.value)} type="text" value={TaskText} />
+                            : <span onDoubleClick={() => setStatusModeTrue(task.title, task._id)}>{task.title}</span>
+                        }
+                    </div>
+                    
+                    <span onClick={() => deleteTask(task._id)} className={style.delete}>
+                        <DeleteOutlined />
+                    </span>
 
-                    </input>
+
                     <div>
                         <Description
                             task={task}
@@ -73,32 +82,38 @@ const Task: React.FC<PropsType> = React.memo(props => {
                             listId={props.listId} />
                     </div>
                     <div className={style.date}>{date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()}</div>
-                    <div>
-                        {index < array.length - 1 && <input onClick={() => changeOrderTasks(array[index]._id, array[index + 1]._id)} type="button" value='-' />}
-                        {index > 0 && <input onClick={() => changeOrderTasks(array[index - 1]._id, array[index]._id)} type="button" value='+' />}
+                    <div className={style.arrows} > 
+                        {index < array.length-1 && <div className={style.down} onClick={() => changeOrderTasks(array[index]._id, array[index+1]._id) }  ><img  src={arrowDown} alt='arrow_down'/> </div> }
+                        {index > 0 && <div onClick={() => changeOrderTasks(array[index-1]._id, array[index]._id)}  className={style.up}><img src={arrowUp} alt='arrow_up'/></div> }
                     </div>
-                </div>
+              
             </div>
         }
     });
 
-    let onTaskChangeText = (text: string) => {
-        changeNewTask(text);
-    }
-
-    let addTask = () => {
-
-        dispatch(postTasksThunk(props.listId, newTaskTitle))
-        changeNewTask('');
+    const submitHandler = (values: any, actions: any) => {
+        dispatch(postTasksThunk(props.listId, values.title))
+        actions.resetForm('')
     }
 
     return (
         <div>
-            <div>
-                <textarea value={newTaskTitle} onChange={(e) => onTaskChangeText(e.currentTarget.value)} />
-                <input onClick={addTask} type="button" value="Add" />
-            </div>
-            <div>
+            <div className={style.task_input}>
+            <Formik
+                initialValues={{
+                    title: ''
+                }}
+                onSubmit={submitHandler}
+            >
+                {props => (
+                    <Form>
+                        <Input name='title' type='text' onChange={props.handleChange} className='task_input'/>
+                        <button type="submit"><span>Add</span></button>
+                    </Form>
+                )}
+            </Formik></div>
+            
+            <div className={style.content}>
                 {taskArray}
             </div>
 

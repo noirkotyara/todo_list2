@@ -2,26 +2,48 @@
     cursor: pointer;
 }
 .taskItem{
-    border: 2px solid blueviolet;
-    margin: 5px;
+    border: 2px solid yellow;
+    margin: 10px;
+    // text-align: center;
+    .title span{
+        margin-left: -5%;
+        font-size: 15px;
+        font-weight: bolder;
+        font-family: 'Montserrat', sans-serif;
+        margin-top: 5px;
+    }
+}
+.task_input{
+    height:115px;
+}
+.tasks_array{
+    padding: 0 20px 20px 20px ;
+}
+
+.content{
+    margin-top: 10px;
 }
 .delete{
     float: right;
     cursor: pointer;
     
 }
-.complete{
+input.complete{
     float: left;
-}
-.date{
-    font-size: smaller;
-    float: right;
+    margin: 5px;
 }
 
-.viewTasks img{
-    width: 30px;
-   
+.arrows{
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    .down, .up{
+        margin: 5px;
+    }
 }
-.viewTasks img:hover{
-    width: 34px;
+
+.date{
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 5px;
 }

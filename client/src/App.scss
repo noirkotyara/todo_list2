@@ -1,17 +1,91 @@
-
-
 header{
     &.ant-layout-header{
         padding: 10px 150px 0 150px;
-        height: auto; 
+        height: auto;
     }
-    &.ant-menu-dark.ant-menu-horizontal{
-        .ant-menu-item-selected{
-            background-color: aquamarine;
+    .ant-menu-item{
+        font-size: 1.2rem;
+    }
+    .ant-menu-item:hover{
+        color:black !important;
+        background-color: #adff2f  !important;
+    }
+    .ant-menu-item-active{
+        color:black !important;
+        background-color: greenyellow  !important;
+    }
+    .ant-menu-item-selected{
+        background-color: rgba(240, 248, 255, 0)  !important;
+    }
+}
+form{
+    
+    .ant-input{
+        font-size: 1rem;
+        width: 30% !important;
+        display: block  !important;
+        text-align: center !important;
+        margin: 20px auto !important;
+        &:hover{
+            border: 1px solid yellowgreen;
         }
-        
     }
-    // &-dark&-horizontal > &-item:hover {
-    //     background-color: aquamarine;
-    //   }
+    .ant-input.task_input{
+        font-size: 1rem;
+        width: 80% !important;
+        display: block  !important;
+        text-align: center !important;
+        margin: 20px auto !important;
+        &:hover{
+            border: 1px solid yellowgreen;
+        }
+    }
+
+    button{
+        background: transparent;
+        border-width: 0;
+        position: relative;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 14px;
+        transition: .3s;
+        outline: none;
+        span{
+            display: block;
+            position: relative;
+            z-index: 3;
+            background: black;
+            color: white;
+            padding: 0 30px;
+            line-height: 40px;
+        }
+        &:before {
+            content: "";
+            position: absolute;
+            width: calc(100% + 5px);
+            height: calc(100% + 5px);
+            left: -10px;
+            top: -6px;
+            background: yellowgreen;
+            z-index: 1;
+            transition: .4s ease-out;
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            width: calc(100% + 5px);
+            height: calc(100% + 5px);
+            right: -10px;
+            bottom: -6px;
+            background: yellow;
+            transition: .4s ease-out .1s;
+        }
+        &:hover:before {
+    transform: translate(16px, 7px);
+}
+&:hover:after {
+    transform: translate(-20px, -10px);
+}
+    }
+    text-align: center;
 }

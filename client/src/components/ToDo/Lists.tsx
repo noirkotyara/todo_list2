@@ -5,42 +5,45 @@ import { getIsFetching } from '../../redux/todo/todo-selectors';
 import { Preloader } from '../Common/Preloader/Preloader';
 import List from './List';
 import style from './Lists.module.scss';
-// import List from './List';
-// import Preloader from '../Common/Preloader';
+import { Formik } from "formik";
+import { Form, Input } from 'formik-antd'
 
 const Lists = React.memo(props => {
 
-    let [newTitle, changeNewTitle] = useState('');
     const isFetching = useSelector(getIsFetching)
     const dispatch = useDispatch()
-    
+
     useEffect(() => {
-        
+
         dispatch(getLists());
     }, []);
-    
-    let onTitleChangeText = (text: string) => {
-        changeNewTitle(text);
-    }
 
-    let addTitle = () => {
-        dispatch(postList(newTitle));
-        changeNewTitle('');
+    const submitHandler = (values: any, actions: any) => {
+        dispatch(postList(values.title))
+        actions.resetForm('')
     }
-
     return (<div>
 
         <div className={style.newTitle}>
             <span className={style.textTitle}>
                 Enter new title
             </span>
-            <div>
-                <textarea value={newTitle} onChange={(e) => onTitleChangeText(e.currentTarget.value)}/>
-                <input onClick={addTitle} type="button" value="Create" />
-            </div>
-
+            <Formik
+                initialValues={{
+                    title: ''
+                }}
+                onSubmit={submitHandler}
+            >
+                {props => (
+                    <Form>
+                        <Input name='title' type='text' onChange={props.handleChange} />
+                        <button type="submit"><span>Create</span></button>
+                    </Form>
+                )}
+            </Formik>
         </div>
-        {isFetching && <Preloader/>}
+
+        {isFetching && <Preloader />}
         <div className={style.content}>
             <List />
         </div>

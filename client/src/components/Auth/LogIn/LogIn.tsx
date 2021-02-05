@@ -1,7 +1,10 @@
 import { Formik } from "formik";
+import { Form, Input } from 'formik-antd'
+import React from "react";
 import { useDispatch } from "react-redux";
 import { logInThunk } from "../../../redux/auth/auth-reducer";
-
+import { Preloader } from "../../Common/Preloader/Preloader";
+import styles from '../LogIn.module.scss';
 
 export const LogInPage = () => {
   const dispatch = useDispatch()
@@ -12,6 +15,7 @@ export const LogInPage = () => {
   }
 
   return (<div>
+    <div className={styles.title}>Log In here</div>
     <Formik
       initialValues={{
         email: '',
@@ -20,15 +24,15 @@ export const LogInPage = () => {
       onSubmit={submitHandler}
     >
       {props => (
-        <form onSubmit={props.handleSubmit}>
-          <input
+        <Form>
+          <Input
             type="text"
             onChange={props.handleChange}
             onBlur={props.handleBlur}
             placeholder='Email'
             name="email"
           />
-          <input
+          <Input
             type="password"
             onChange={props.handleChange}
             onBlur={props.handleBlur}
@@ -36,8 +40,8 @@ export const LogInPage = () => {
             name="password"
           />
 
-          <button type="submit">Submit</button>
-        </form>
+          <button type="submit"><span>Submit</span></button>
+        </Form>
       )}
     </Formik>
   </div>)

@@ -2,10 +2,12 @@ const config = require('config')
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const path = require('path')
 const authRoutes = require('./routes/Auth.routes')
 const todoRoutes = require('./routes/Todo.routes')
 const tasksRoutes = require('./routes/Tasks.routes')
-const PORT = config.get('port')
+
+const PORT = process.env.PORT || config.get('port')
 
 let app = express();
 
@@ -17,7 +19,7 @@ app.use(cors())
 
 const start = async () => {
     try {
-        await mongoose.connect(config.get('mongoURI'), {
+        await mongoose.connect(process.env.MONGODB_URI || config.get('mongoURI'), {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,

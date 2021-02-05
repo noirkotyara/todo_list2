@@ -17,12 +17,10 @@ const Tasks: React.FC<PropsType> = React.memo(props => {
         dispatch(getTasksThunk(listId))
         
     }
-{/* <img src={arrowDown} alt='arrowDown'></img> */}
- 
     return (
         <div>
             <span  className={style.viewTasks} onClick={() => viewTasks(props.listId)}> + </span>
-            {viewMode && <div>
+            {viewMode && <div className={style.tasks_array}>
                 <Task listId={props.listId}  />
             </div>}
             
