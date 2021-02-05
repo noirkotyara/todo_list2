@@ -40,7 +40,17 @@ form{
             border: 1px solid yellowgreen;
         }
     }
-
+    .ant-input.list_input{
+        font-size: 1rem;
+        width: 70% !important;
+        display: block  !important;
+        text-align: center !important;
+        margin: 20px auto !important;
+        &:hover{
+            border: 1px solid yellowgreen;
+        }
+    }
+    
     button{
         background: transparent;
         border-width: 0;
@@ -89,3 +99,11 @@ form{
     }
     text-align: center;
 }
+
+.ant-checkbox-checked .ant-checkbox-inner{
+    background-color: black !important;
+    border-color: black !important;
+}
+// .ant-checkbox .ant-checkbox-checked {
+    //     background-color:yellowgreen !important;
+    // }

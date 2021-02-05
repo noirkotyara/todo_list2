@@ -9,6 +9,7 @@ import { Formik } from "formik";
 import { Form, Input } from 'formik-antd'
 
 
+
 const Lists = React.memo( () => {
 
     const isFetching = useSelector(getIsFetching)
@@ -24,7 +25,6 @@ const Lists = React.memo( () => {
         actions.resetForm('')
     }
     return (<div>
-
         <div className={style.newTitle}>
             <span className={style.textTitle}>
                 Enter new title

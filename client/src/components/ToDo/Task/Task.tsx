@@ -7,9 +7,11 @@ import { deleteTaskThunk, postTasksThunk, reorderTaskThunk, updateTaskThunk } fr
 import { TaskType } from '../../../api/api';
 import { Formik } from "formik";
 import { Form, Input } from 'formik-antd'
-import { DeleteOutlined } from '@ant-design/icons';
 import arrowUp from './../../../assest/ArrowUp.svg';
 import arrowDown from './../../../assest/ArrowDown.svg';
+import deleteIcon from './../../../assest/delB.svg'
+import { Tooltip } from 'antd';
+import Checkbox from 'antd/lib/checkbox/Checkbox';
 
 type PropsType = {
     listId: string
@@ -58,22 +60,33 @@ const Task: React.FC<PropsType> = React.memo(props => {
         if (task.listId === props.listId) {
             let date = new Date(task.startDate)
             return <div key={task._id} className={style.taskItem}>
-                    <input checked={task.completed} //CHECKBOX
-                        onChange={(e) => changeCheckBox(e.currentTarget.checked, task)}
-                        className={style.complete}
+                    <Checkbox checked={task.completed} //CHECKBOX
+                        onChange={(e) => changeCheckBox(e.target.checked, task)}
+                        className={`${style.complete} completed_checkbox`}
                         type='checkbox'
                     />
                     <div className={style.title}>
                         {(editMode && choosedTask === task._id)
-                            ? <input autoFocus={true} onBlur={() => setStatusModeFalse(task)} onChange={(e) => setTaskText(e.currentTarget.value)} type="text" value={TaskText} />
+                            ? <Formik
+                            initialValues={{
+                                title: TaskText
+                            }}
+                            onSubmit={() => setStatusModeFalse(task)}
+                        >
+                            {props => (
+                                <Form onBlur={props.handleSubmit}>
+                                    <Input className='list_input' name='title' autoFocus={true} onChange={(e) => setTaskText(e.currentTarget.value)} type='text' onBlur={props.handleBlur} />
+                                </Form>
+                            )}
+                        </Formik>
                             : <span onDoubleClick={() => setStatusModeTrue(task.title, task._id)}>{task.title}</span>
                         }
                     </div>
-                    
-                    <span onClick={() => deleteTask(task._id)} className={style.delete}>
-                        <DeleteOutlined />
-                    </span>
-
+                    <Tooltip placement="right" title='Delete task'>
+                        <span onClick={() => deleteTask(task._id)} className={style.delete}>
+                            <img src={deleteIcon} alt="delete task"/>
+                        </span>
+                    </Tooltip>
 
                     <div>
                         <Description
@@ -99,12 +112,7 @@ const Task: React.FC<PropsType> = React.memo(props => {
     return (
         <div>
             <div className={style.task_input}>
-            <Formik
-                initialValues={{
-                    title: ''
-                }}
-                onSubmit={submitHandler}
-            >
+            <Formik initialValues={{title: ''}} onSubmit={submitHandler} >
                 {props => (
                     <Form>
                         <Input name='title' type='text' onChange={props.handleChange} className='task_input'/>
@@ -113,7 +121,7 @@ const Task: React.FC<PropsType> = React.memo(props => {
                 )}
             </Formik></div>
             
-            <div className={style.content}>
+            <div className={style.content_task}>
                 {taskArray}
             </div>
 

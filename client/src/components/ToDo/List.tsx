@@ -9,7 +9,9 @@ import Tasks from './Task/Tasks';
 import arrowUp from './../../assest/ArrowUp.svg';
 import arrowDown from './../../assest/ArrowDown.svg';
 import deleteTask from './../../assest/delB.svg';
-
+import { Formik } from 'formik';
+import { Form, Input } from 'formik-antd';
+import { Tooltip } from 'antd';
 
 const List: React.FC<any> = (props) => {
 
@@ -46,13 +48,29 @@ const List: React.FC<any> = (props) => {
             <div className={style.title}>
                 <span className={style.edit_title}>
                     {(editMode && list._id === choosedTitle)
-                        ? <input onBlur={updateTitle} autoFocus={true} onChange={(e) => changeNewTitleText(e.currentTarget.value)} value={newTitleText}></input>
+                        ? <Formik
+                        initialValues={{
+                            title: newTitleText
+                        }}
+                        onSubmit={updateTitle}
+                    >
+                        {props => (
+                            <Form onBlur={props.handleSubmit}>
+                                <Input className='list_input' name='title' autoFocus={true} onChange={(e) => changeNewTitleText(e.currentTarget.value)} type='text' onBlur={props.handleBlur} />
+                            </Form>
+                        )}
+                    </Formik>
+                        
+                        
+                        //
                         : <span className={style.listTitle} onDoubleClick={() => activateEditMode(list.title, list._id)}>{list.title}</span>
                     }
                 </span>
-                <div onClick={() => deleteList(list._id)} className={style.del_title}>
-                   <img src={deleteTask} title='Delete list' alt="delete task img"/>
-                </div>
+                <Tooltip placement="right" title='Delete list'>
+                    <span onClick={() => deleteList(list._id)} className={style.del_title}>
+                        <img src={deleteTask} alt="delete task img"/>
+                    </span>
+                </Tooltip>
             </div>
             
             <div className={style.tasks}>

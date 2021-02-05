@@ -7,6 +7,7 @@
     width: 100%;
     height: 100%;
     margin: 10px auto;
+    
     .textTitle{
         text-align: center;
         margin: 20px;
@@ -16,18 +17,21 @@
 }
 
 .listUI{
-    width: 30%;
+    width: 35%;
     height: 100%;
-    background: chartreuse;
+    
     margin: 20px auto;
-    .title{
+    border: 5px solid yellowgreen;
+    border-radius: 50px 0 50px 0;
+    position: relative;
+    .title{ 
+        width: 80%;
+        overflow-x: auto;
+        margin: 20px auto;
         .edit_title span{
-            // overflow: hidden;
+           
             font-size: 18px;
             font-family: 'Montserrat', sans-serif;
-        }
-        .tasks{
-            
         }
     }
     .arrows{
@@ -38,26 +42,29 @@
             margin: 10px;
         }
     }
+    // rgba(75, 70, 70, 0.445)
     .date{
+        padding-top: 5px;
+        margin: 10px auto;
+        border-top: 5px solid rgb(167, 167, 124);
+        border-left: 5px solid rgb(167, 167, 124);
+        border-right: 5px solid rgb(167, 167, 124);
+        border-radius: 50px;
+        width: 50%;
         font-size: 14px;
         font-family: 'Montserrat', sans-serif;
     }
-}
-.tasks{
-    margin: 0 auto;
-    width: 80%;
-    height:100%;
-    min-height: 25px;
-    max-height: auto;
-    background: coral;
-}
-.del_title{
-    float: right;
-    cursor: pointer;
-    position: relative;
-    img{
-        height:40px;
-        width: 40px;
-        padding: 2px;
+    .del_title{
+        float: right;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 5px;
+        img{
+            height:40px;
+            width: 40px;
+            padding: 2px;
+        }
     }
 }
