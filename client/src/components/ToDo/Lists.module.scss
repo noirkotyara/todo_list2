@@ -22,11 +22,9 @@
     margin: 20px auto;
     .title{
         .edit_title span{
+            // overflow: hidden;
             font-size: 18px;
             font-family: 'Montserrat', sans-serif;
-        }
-        .del_title{
-            float: right;
         }
         .tasks{
             
@@ -48,11 +46,18 @@
 .tasks{
     margin: 0 auto;
     width: 80%;
+    height:100%;
     min-height: 25px;
     max-height: auto;
     background: coral;
 }
-.delTitle{
+.del_title{
     float: right;
     cursor: pointer;
+    position: relative;
+    img{
+        height:40px;
+        width: 40px;
+        padding: 2px;
+    }
 }

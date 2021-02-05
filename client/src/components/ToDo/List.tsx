@@ -5,9 +5,10 @@ import { getLists } from '../../redux/todo/todo-selectors';
 import { ListType, UserType } from '../../api/api';
 import { changeOrderThunk, deleteListThunk, renameTitleThunk } from '../../redux/todo/todo-reducer';
 import Tasks from './Task/Tasks';
-import {DeleteOutlined} from '@ant-design/icons';
+// import {DeleteOutlined} from '@ant-design/icons';
 import arrowUp from './../../assest/ArrowUp.svg';
 import arrowDown from './../../assest/ArrowDown.svg';
+import deleteTask from './../../assest/delB.svg';
 
 
 const List: React.FC<any> = (props) => {
@@ -49,10 +50,11 @@ const List: React.FC<any> = (props) => {
                         : <span className={style.listTitle} onDoubleClick={() => activateEditMode(list.title, list._id)}>{list.title}</span>
                     }
                 </span>
-                <span onClick={() => deleteList(list._id)} className={style.del_title}>
-                    <DeleteOutlined />
-                </span>
+                <div onClick={() => deleteList(list._id)} className={style.del_title}>
+                   <img src={deleteTask} title='Delete list' alt="delete task img"/>
+                </div>
             </div>
+            
             <div className={style.tasks}>
                     <Tasks listId={list._id}/>
             </div>

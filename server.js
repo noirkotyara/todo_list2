@@ -7,9 +7,9 @@ const authRoutes = require('./routes/Auth.routes')
 const todoRoutes = require('./routes/Todo.routes')
 const tasksRoutes = require('./routes/Tasks.routes')
 
-const PORT = process.env.PORT || config.get('port')
-
 let app = express();
+
+const PORT = process.env.PORT || config.get('port')
 
 app.use(express.json({ extended: true }))
 app.use('/api/auth', authRoutes)
@@ -25,8 +25,6 @@ const start = async () => {
             useCreateIndex: true,
             useFindAndModify: false
         })
-        
-        console.log('Database connected');
         app.listen(PORT, () => {
             console.log(`App listening at http://localhost:${PORT}`)
         })

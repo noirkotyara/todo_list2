@@ -8,7 +8,8 @@ import style from './Lists.module.scss';
 import { Formik } from "formik";
 import { Form, Input } from 'formik-antd'
 
-const Lists = React.memo(props => {
+
+const Lists = React.memo( () => {
 
     const isFetching = useSelector(getIsFetching)
     const dispatch = useDispatch()

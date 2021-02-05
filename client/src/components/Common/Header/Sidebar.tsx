@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Drawer, Button } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { actionsAuth } from '../../../redux/auth/auth-reducer';
 import styles from './Header.module.scss';
+import { getUserInfo } from '../../../redux/auth/auth-selectors';
 
 export const Sidebar: React.FC<{}> = () => {
   const [visible, setVisible] = useState(false);
+  const user = useSelector(getUserInfo)
   const showDrawer = () => {
     setVisible(true);
   }
@@ -17,14 +19,15 @@ export const Sidebar: React.FC<{}> = () => {
         dispatch(actionsAuth.setIsAuthorized(false))
         dispatch(actionsAuth.setUser(null))
       }
-      
+  let title = `${user?.firstName} ${user?.lastName}`
+  
   return (
     <>
       <span onClick={showDrawer} className={styles.info}>
         Info
       </span>
       <Drawer
-        title="Basic Drawer"
+        title={title}
         placement="left"
         closable={false}
         onClose={onClose}
