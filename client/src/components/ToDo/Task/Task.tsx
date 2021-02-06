@@ -47,7 +47,8 @@ const Task: React.FC<PropsType> = React.memo(props => {
     }
 
 
-    let setStatusModeFalse = (task: any) => {
+    let setStatusModeFalse = (e: any, task: any) => {
+        debugger
         changeEditMode(!editMode);
         dispatch(updateTaskThunk(props.listId, task._id, { ...task, title: TaskText }))
     }
@@ -71,7 +72,7 @@ const Task: React.FC<PropsType> = React.memo(props => {
                             initialValues={{
                                 title: TaskText
                             }}
-                            onSubmit={() => setStatusModeFalse(task)}
+                            onSubmit={(e) => setStatusModeFalse(e, task)}
                         >
                             {props => (
                                 <Form onBlur={props.handleSubmit}>

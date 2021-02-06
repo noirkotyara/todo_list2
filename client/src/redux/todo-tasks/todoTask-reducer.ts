@@ -147,6 +147,7 @@ export const updateTaskThunk = (
             dispatch(actionsTodoTask.isFetching(true))
             let response = await tasksAPI.updateTasks(todolistId, taskId, updatedTaskObject, getState().authR.user.token);
             dispatch(actionsTodoTask.isFetching(false))
+            debugger
             dispatch(actionsTodoTask.updateTask(taskId, response.updatedTask))
             dispatch(actionsTodoTask.setErrors(response.message))
         } catch (e) {

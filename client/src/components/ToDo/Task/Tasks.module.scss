@@ -38,11 +38,15 @@
         margin: 10px;
     }
     .title{
-        margin: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 50%;
+        margin: 0 auto;
+        // border-bottom: 2px solid grey;
        span{
-        margin-left: -5%;
+        // margin-left: -5%;
         
-        font-size: 15px;
+        font-size: 20px;
         font-weight: bolder;
         font-family: 'Montserrat', sans-serif;
         margin-top: 5px;
@@ -57,7 +61,7 @@
 }
 
 .content{
-    margin-top: 10px;
+    margin-top: 0px;
 }
 .delete{
     float: right;
@@ -86,4 +90,9 @@
     font-size: 12px;
     font-family: 'Montserrat', sans-serif;
     margin-top: 5px;
+}
+.desc{
+    padding: 5px;
+    font-size: 15px;
+    background: rgba(128, 128, 128, 0.301);
 }

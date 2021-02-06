@@ -32,7 +32,7 @@ const Description: React.FC<PropsType> = props => {
     }
     
     return(
-        <div>
+        <div className={style.desc}>
             {(editMode && choosedTaskId === props.taskId)
             ? <Formik
                             initialValues={{
@@ -46,7 +46,7 @@ const Description: React.FC<PropsType> = props => {
                                 </Form>
                             )}
                         </Formik>
-            :<span onDoubleClick={turnEditMode}>{props.task.description}</span>
+            :<span  onDoubleClick={turnEditMode}>{props.task.description}</span>
             }
         </div>
     )
